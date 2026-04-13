@@ -3,32 +3,34 @@ package com.example;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 /**
- * Maven Selenium - SauceDemo Login
+ * Hello world!
  */
 public class App {
-    public static void main(String[] args) throws InterruptedException {
-        // Set ChromeDriver path
-        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver");
-        
-        // Initialize and setup
-        WebDriver driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        
-        // Navigate
-        driver.get("https://www.saucedemo.com/");
-        
-        // Login credentials (from inspect)
-        driver.findElement(By.id("user-name")).sendKeys("standard_user");
-        driver.findElement(By.id("password")).sendKeys("secret_sauce");
-        driver.findElement(By.id("login-button")).click();
-        
-        // Verify success (pause)
-        Thread.sleep(5000);
-        driver.quit();
-        
-        System.out.println("✓ SauceDemo Login Successful!");
+    public static void main(String[] args) {
+
+        // Configure Chrome for headless execution
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");       // modern headless mode
+        options.addArguments("--no-sandbox");         // required in Jenkins/Linux
+        options.addArguments("--disable-dev-shm-usage"); // prevents crashes
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080"); // optional but useful
+
+        WebDriver driver = new ChromeDriver(options);
+
+        try {
+            driver.get("https://www.saucedemo.com/");
+
+            driver.findElement(By.id("user-name")).sendKeys("standard_user");
+            driver.findElement(By.id("password")).sendKeys("secret_sauce");
+            driver.findElement(By.id("login-button")).click();
+
+            System.out.println("Page Title: " + driver.getTitle());
+        } finally {
+            driver.quit(); // always close browser
+        }
     }
 }
-
